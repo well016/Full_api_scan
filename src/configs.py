@@ -84,16 +84,16 @@ PATHS = [
 REGEX_LIST = [
     # Named Project API Key (no matter normal or restricted) still valid until Dec 2, 2024
     (re.compile(r"sk-proj-[A-Za-z0-9-_]{74}T3BlbkFJ[A-Za-z0-9-_]{73}A"), True, True),
-    
+
     # Service Account key (new format, valid until Oct 13, 2025)
     (re.compile(r"sk-svcacct-[A-Za-z0-9-_]{74}T3BlbkFJ[A-Za-z0-9-_]{73}A"), False, True),
-    
+
     # Old Project API Key (as of Oct 13, 2025, not sure if still valid)
     (re.compile(r"sk-proj-[A-Za-z0-9-_]{58}T3BlbkFJ[A-Za-z0-9-_]{58}"), True, True),
-    
+
     # Service Account Key (not valid since Oct 13, 2025)
     # (re.compile(r"sk-svcacct-[A-Za-z0-9-_]\+T3BlbkFJ[A-Za-z0-9-_]+"), False, False), # No search results on Oct 14, 2025
-    
+
     (re.compile(r"sk-proj-[A-Za-z0-9]{20}T3BlbkFJ[A-Za-z0-9]{20}"), True, False),
     # (re.compile(r"sk-[a-zA-Z0-9]{48}"), True, False), # OpenAI deprecated these format, because the keys are only "sk-proj" "sk-svcacct-"
 ]
