@@ -80,7 +80,7 @@ PATHS = [
     "path:.secret OR path:.private OR path:*.key",
 ]
 
-# regex, have_many_results, result_too_lang
+# regex, have_many_results (if true, using AND to filter out keywords), result_too_lang (if true, the result needs to be expanded)
 REGEX_LIST = [
     # Named Project API Key (no matter normal or restricted) still valid until Dec 2, 2024
     (re.compile(r"sk-proj-[A-Za-z0-9-_]{74}T3BlbkFJ[A-Za-z0-9-_]{73}A"), True, True),
