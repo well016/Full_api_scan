@@ -118,11 +118,11 @@ You can view the contents of this database using any SQLite database browser of 
 
 **Q: Why are you using Selenium instead of the GitHub Search API?**
 
-A: The official GitHub search API does not support regex search. Only web-based search does.
+A: We use regex search to have the best search results. However, the official GitHub search API does not support regex search, only web-based search does.
 
 **Q: Why are you limiting the programming language in the search instead of searching all languages?**
 
-A: The web-based search only provides the first 5 pages of results. There are many API keys available. By limiting the language, we can break down the search results and obtain more keys.
+A: There are many API keys available. However, the web-based search only provides the first 5 pages of results. By limiting the language, we can break down the search results and obtain more keys.
 
 **Q: Why don't you use multithreading?**
 
