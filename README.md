@@ -134,7 +134,7 @@ A: The screenshots in this repo demonstrate the tool's ability to scan for avail
 
 **Q: What's the push protection?**
 
-A: see picture.
+A: Push protection is a feature provided by GitHub to prevent users from accidentally pushing sensitive information, such as API keys, to their repositories. When push protection is enabled, GitHub scans the code being pushed for known patterns of sensitive information and blocks the push if any are found. (see picture below)
 
 <p align="center">
     <kbd><img src="pics/warning1.png" alt="GitHub Push Protection" width="400"> </kbd>
