@@ -42,9 +42,9 @@ Ensure you have the following installed on your system:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/Junyi-99/ChatGPT-API-Leakage
+    git clone https://github.com/Junyi-99/ChatGPT-API-Scanner
 
-    cd ChatGPT-API-Leakage
+    cd ChatGPT-API-Scanner
     ```
 
 2. Install required pypi packages
