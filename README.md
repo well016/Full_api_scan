@@ -4,19 +4,19 @@ This tool scans GitHub for available OpenAI API Keys.
 
 ![Result Demo 1](pics/demo.png)
 
-> [!NOTE]
-> As of `August 21, 2024`, GitHub has enabled push protection to prevent API key leakage, which could significantly impact this repository.
-
-> [!NOTE]
-> As of `March 11, 2024`, secret scanning and push protection will be enabled by default for all new user-owned public repositories that you create.
-> Check this announcement [here](https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository).
-
 > [!WARNING]
 > **⚠️ DISCLAIMER**
 >
 > THIS PROJECT IS ONLY FOR ***SECURITY RESEARCH*** AND REMINDS OTHERS TO PROTECT THEIR PROPERTY, DO NOT USE IT ILLEGALLY!!
 >
 > The project authors are not responsible for any consequences resulting from misuse.
+
+> [!NOTE]
+> As of `August 21, 2024`, GitHub has enabled push protection to prevent API key leakage, which could significantly impact this repository.
+
+> [!NOTE]
+> As of `March 11, 2024`, secret scanning and push protection will be enabled by default for all new user-owned public repositories that you create.
+> Check this announcement [here](https://docs.github.com/en/code-security/getting-started/quickstart-for-securing-your-repository).
 
 ## Keeping Your API Key Safe
 
