@@ -1,3 +1,5 @@
+"""Entry point that delegates to the scanner package under src/."""
+
 import runpy
 import sys
 from pathlib import Path
