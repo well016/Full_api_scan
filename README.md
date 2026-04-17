@@ -35,7 +35,7 @@ This project has been tested and works perfectly on macOS, Windows and WSL2 (see
 Ensure you have the following installed on your system:
 
 - Google Chrome
-- Python3
+- [uv](https://docs.astral.sh/uv/) (Python package manager; handles Python install automatically)
 
 ## Installation
 
@@ -47,10 +47,16 @@ Ensure you have the following installed on your system:
     cd ChatGPT-API-Scanner
     ```
 
-2. Install required pypi packages
+2. Install dependencies (uv reads `pyproject.toml` / `uv.lock` and provisions the matching Python version from `.python-version`):
 
     ```bash
-    pip install selenium tqdm openai rich
+    uv sync
+    ```
+
+    To include dev tools (pylint, flake8, ruff):
+
+    ```bash
+    uv sync --all-groups
     ```
 
 ## Usage
@@ -58,7 +64,7 @@ Ensure you have the following installed on your system:
 1. Run the main script:
 
     ```bash
-    python3 src/main.py
+    uv run main.py
     ```
 
 2. You will be prompted to log in to your GitHub account in the browser. Please do so.
@@ -81,13 +87,13 @@ Examples:
 
 ```bash
 # Start scanning from iteration 100
-python3 src/main.py --from-iter 100
+uv run main.py --from-iter 100
 
 # Only check existing keys
-python3 src/main.py --check-existed-keys-only
+uv run main.py --check-existed-keys-only
 
 # Use custom keywords and languages
-python3 src/main.py -k "openai" "chatgpt" -l python javascript
+uv run main.py -k "openai" "chatgpt" -l python javascript
 ```
 
 ## Results

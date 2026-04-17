@@ -1,0 +1,19 @@
+[project]
+name = "chatgpt-api-scanner"
+version = "0.1.0"
+description = "Scan GitHub for leaked OpenAI API keys (for security research)"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "openai>=2.32.0",
+    "rich>=15.0.0",
+    "selenium>=4.43.0",
+    "tqdm>=4.67.3",
+]
+
+[dependency-groups]
+dev = [
+    "pylint>=3.0.0",
+    "flake8>=7.0.0",
+    "ruff>=0.2.0",
+]
