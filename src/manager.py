@@ -180,7 +180,16 @@ class DatabaseManager:
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='APIKeys'")
         if self.cur.fetchone() is None:
             logging.info("Creating table APIKeys")
-            self.cur.execute("CREATE TABLE APIKeys(apiKey, status, lastChecked)")
+            self.cur.execute("CREATE TABLE APIKeys(apiKey, provider, status, lastChecked)")
+        else:
+            # Backward compatible migration for old schema: APIKeys(apiKey, status, lastChecked)
+            self.cur.execute("PRAGMA table_info(APIKeys)")
+            columns = [row[1] for row in self.cur.fetchall()]
+            if "provider" not in columns:
+                logging.info("Migrating table APIKeys: adding provider column")
+                self.cur.execute("ALTER TABLE APIKeys ADD COLUMN provider TEXT")
+                self.cur.execute("UPDATE APIKeys SET provider='openai' WHERE provider IS NULL OR provider=''")
+                self.con.commit()
 
         self.cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='URLs'")
         if self.cur.fetchone() is None:
@@ -205,7 +214,7 @@ class DatabaseManager:
         """
         if self.cur is None:
             raise ValueError("Cursor is not initialized")
-        self.cur.execute("SELECT apiKey FROM APIKeys WHERE status='insufficient_quota'")
+        self.cur.execute("SELECT apiKey, provider FROM APIKeys WHERE status='insufficient_quota'")
         return self.cur.fetchall()
 
     def all_keys(self) -> list:
@@ -217,7 +226,7 @@ class DatabaseManager:
         """
         if self.cur is None:
             raise ValueError("Cursor is not initialized")
-        self.cur.execute("SELECT apiKey FROM APIKeys WHERE status='yes'")
+        self.cur.execute("SELECT apiKey, provider FROM APIKeys WHERE status='yes'")
         return self.cur.fetchall()
 
     def deduplicate(self) -> None:
@@ -228,12 +237,16 @@ class DatabaseManager:
             raise ValueError("Connection is not initialized")
         if self.cur is None:
             raise ValueError("Cursor is not initialized")
-        self.cur.execute("CREATE TABLE temp_table as SELECT apiKey, status, MAX(lastChecked) as lastChecked FROM APIKeys GROUP BY apiKey;")
+        self.cur.execute(
+            "CREATE TABLE temp_table as "
+            "SELECT apiKey, provider, status, MAX(lastChecked) as lastChecked "
+            "FROM APIKeys GROUP BY apiKey, provider;"
+        )
         self.cur.execute("DROP TABLE APIKeys;")
         self.cur.execute("ALTER TABLE temp_table RENAME TO APIKeys;")
         self.con.commit()
 
-    def delete(self, api_key: str) -> None:
+    def delete(self, api_key: str, provider: str | None = None) -> None:
         """
         Delete a specific API key from the database.
 
@@ -244,10 +257,13 @@ class DatabaseManager:
             raise ValueError("Connection is not initialized")
         if self.cur is None:
             raise ValueError("Cursor is not initialized")
-        self.cur.execute("DELETE FROM APIKeys WHERE apiKey=?", (api_key,))
+        if provider is None:
+            self.cur.execute("DELETE FROM APIKeys WHERE apiKey=?", (api_key,))
+        else:
+            self.cur.execute("DELETE FROM APIKeys WHERE apiKey=? AND provider=?", (api_key, provider))
         self.con.commit()
 
-    def insert(self, api_key: str, status: str):
+    def insert(self, api_key: str, status: str, provider: str = "openai"):
         """
         Insert a new API key and status into the database.
 
@@ -260,10 +276,13 @@ class DatabaseManager:
         if self.cur is None:
             raise ValueError("Cursor is not initialized")
         today = date.today()
-        self.cur.execute("INSERT INTO APIKeys(apiKey, status, lastChecked) VALUES(?, ?, ?)", (api_key, status, today))
+        self.cur.execute(
+            "INSERT INTO APIKeys(apiKey, provider, status, lastChecked) VALUES(?, ?, ?, ?)",
+            (api_key, provider, status, today),
+        )
         self.con.commit()
 
-    def key_exists(self, api_key: str) -> bool:
+    def key_exists(self, api_key: str, provider: str | None = None) -> bool:
         """
         Check if a given API key exists in the database.
 
@@ -275,7 +294,10 @@ class DatabaseManager:
         """
         if self.cur is None:
             raise ValueError("Cursor is not initialized")
-        self.cur.execute("SELECT apiKey FROM APIKeys WHERE apiKey=?", (api_key,))
+        if provider is None:
+            self.cur.execute("SELECT apiKey FROM APIKeys WHERE apiKey=?", (api_key,))
+        else:
+            self.cur.execute("SELECT apiKey FROM APIKeys WHERE apiKey=? AND provider=?", (api_key, provider))
         return self.cur.fetchone() is not None
 
     def insert_url(self, url: str) -> None:
